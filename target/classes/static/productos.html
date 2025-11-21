@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos - LogiTrack</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/productos.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="navbar">
+                <div class="logo">LogiTrack</div>
+                <nav class="nav-links">
+                    <a href="dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="movimientos.html" class="nav-link">Movimientos</a>
+                    <a href="bodegas.html" class="nav-link">Bodegas</a>
+                    <a href="productos.html" class="nav-link active">Productos</a>
+                    <a href="auditoria.html" class="nav-link">Auditoría</a>
+                </nav>
+                <div class="user-menu">
+                    <span id="userName">Usuario</span>
+                    <button onclick="logout()" class="btn btn-secondary">Cerrar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>Gestión de Productos</h1>
+            <p>Administrar catálogo de productos</p>
+            <button class="btn btn-primary" onclick="showProductModal('create')">+ Nuevo Producto</button>
+        </div>
+
+        <div class="filters-container">
+            <div class="filters-header">
+                <div class="filters-title">
+                    Filtros de Productos
+                </div>
+                <div class="filters-actions">
+                    <span class="filter-badge" id="productosFilterCount" style="display: none;">0</span>
+                </div>
+            </div>
+
+            <div class="filters-grid">
+                <div class="filter-field">
+                    <label class="filter-label">
+                        <span class="filter-label-icon">🔍</span>
+                        Buscar
+                    </label>
+                    <div class="filter-input-wrapper">
+                        <span class="filter-input-icon">📦</span>
+                        <input type="text" id="searchProducto" class="filter-input" 
+                            placeholder="Nombre o categoría..." 
+                            onkeyup="debouncedFilterProductos()">
+                    </div>
+                </div>
+
+                <div class="filter-field">
+                    <label class="filter-label">
+                        <span class="filter-label-icon">🏷️</span>
+                        Categoría
+                    </label>
+                    <div class="filter-input-wrapper">
+                        <span class="filter-input-icon">📂</span>
+                        <select id="filterCategoria" class="filter-select" onchange="filterProductos()">
+                            <option value="">Todas las categorías</option>
+                            <option value="TECNOLOGIA">Tecnología</option>
+                            <option value="MUEBLES">Muebles</option>
+                            <option value="OFICINA">Oficina</option>
+                            <option value="HERRAMIENTAS">Herramientas</option>
+                            <option value="ELECTRODOMESTICOS">Electrodomésticos</option>
+                            <option value="MATERIALES">Materiales</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-field">
+                    <label class="filter-label">
+                        <span class="filter-label-icon">⚡</span>
+                        Estado
+                    </label>
+                    <div class="filter-input-wrapper">
+                        <span class="filter-input-icon">📊</span>
+                        <select id="filterActivo" class="filter-select" onchange="filterProductos()">
+                            <option value="">Todos los estados</option>
+                            <option value="true">Activos</option>
+                            <option value="false">Inactivos</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filters-buttons">
+                <button class="btn-filter btn-filter-clear" onclick="clearProductosFilters()">
+                    ✖️ Limpiar Filtros
+                </button>
+            </div>
+        </div>
+
+        <div id="productosList" class="productos-table-container">
+            <div class="loading">Cargando productos...</div>
+        </div>
+    </main>
+
+    <!-- Modal Producto -->
+    <div id="productoModal" class="modal product-modal">
+        <div class="modal-content product-modal-content">
+            <div class="modal-header">
+                <h3 id="productoModalTitle">Nuevo Producto</h3>
+                <span class="close" onclick="closeProductModal()">&times;</span>
+            </div>
+            <form id="productoForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="productoNombre">Nombre *</label>
+                        <input type="text" id="productoNombre" name="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productoCategoria">Categoría *</label>
+                        <select id="productoCategoria" name="categoria" required>
+                            <option value="">Seleccionar categoría...</option>
+                            <option value="TECNOLOGIA">Tecnología</option>
+                            <option value="MUEBLES">Muebles</option>
+                            <option value="OFICINA">Oficina</option>
+                            <option value="HERRAMIENTAS">Herramientas</option>
+                            <option value="ELECTRODOMESTICOS">Electrodomésticos</option>
+                            <option value="MATERIALES">Materiales</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="productoPrecio">Precio *</label>
+                        <input type="number" id="productoPrecio" name="precio" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group form-group--checkbox">
+                        <label>
+                            <input type="checkbox" id="productoActivo" name="activo" checked>
+                            Producto activo
+                        </label>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeProductModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Producto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/productos.js"></script>
+    <script src="js/utils.js"></script>
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movimientos - LogiTrack</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/movimientos.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="navbar">
+                <div class="logo">LogiTrack</div>
+                <nav class="nav-links">
+                    <a href="dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="movimientos.html" class="nav-link active">Movimientos</a>
+                    <a href="bodegas.html" class="nav-link">Bodegas</a>
+                    <a href="productos.html" class="nav-link">Productos</a>
+                    <a href="auditoria.html" class="nav-link">Auditoría</a>
+                </nav>
+                <div class="user-menu">
+                    <span id="userName">Usuario</span>
+                    <button onclick="logout()" class="btn btn-secondary">Cerrar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="page-header">
+            <h1>Gestión de Movimientos</h1>
+            <p>Registrar y consultar movimientos de inventario</p>
+        </div>
+
+        <!-- Tabs de Navegación -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('registrar')">Registrar Movimiento</button>
+            <button class="tab-btn" onclick="showTab('consultar')">Consultar Movimientos</button>
+            <button class="tab-btn" onclick="showTab('stock')">Ver Stock</button>
+        </div>
+
+        <!-- Tab: Registrar Movimiento -->
+        <div id="registrar" class="tab-content active">
+            <div class="movement-form-container">
+                <div class="form-section">
+                    <h3>Tipo de Movimiento</h3>
+                    <div class="movement-type-selector">
+                        <div class="type-option" onclick="selectMovementType('ENTRADA')">
+                            <div class="type-icon">⬇️</div>
+                            <div class="type-info">
+                                <h4>Entrada</h4>
+                                <p>Ingreso de productos al inventario</p>
+                            </div>
+                        </div>
+                        <div class="type-option" onclick="selectMovementType('SALIDA')">
+                            <div class="type-icon">⬆️</div>
+                            <div class="type-info">
+                                <h4>Salida</h4>
+                                <p>Salida de productos del inventario</p>
+                            </div>
+                        </div>
+                        <div class="type-option" onclick="selectMovementType('TRANSFERENCIA')">
+                            <div class="type-icon">🔄</div>
+                            <div class="type-info">
+                                <h4>Transferencia</h4>
+                                <p>Transferencia entre bodegas</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulario Dinámico -->
+                <form id="movementForm" class="movement-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bodegaOrigen">Bodega Origen</label>
+                            <select id="bodegaOrigen" name="bodegaOrigen" required>
+                                <option value="">Seleccionar bodega...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" id="bodegaDestinoGroup" style="display: none;">
+                            <label for="bodegaDestino">Bodega Destino</label>
+                            <select id="bodegaDestino" name="bodegaDestino">
+                                <option value="">Seleccionar bodega...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Detalles del Movimiento -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h3>Productos</h3>
+                            <button type="button" class="btn btn-primary" onclick="addProductRow()">
+                                + Agregar Producto
+                            </button>
+                        </div>
+                        
+                        <div id="productRows" class="product-rows">
+                            <!-- Filas de productos se agregarán aquí dinámicamente -->
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="observaciones">Observaciones</label>
+                        <textarea id="observaciones" name="observaciones" rows="3" 
+                                  placeholder="Observaciones adicionales..."></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="resetForm()">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Registrar Movimiento</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tab: Consultar Movimientos -->
+        <div id="consultar" class="tab-content">
+            <div class="filters-container">
+                <div class="filters-header">
+                    <div class="filters-title">
+                        Filtros de Búsqueda
+                    </div>
+                    <div class="filters-actions">
+                        <span class="filter-badge" id="activeFiltersCount" style="display: none;">0</span>
+                    </div>
+                </div>
+
+                <div class="filters-grid">
+                    <div class="filter-field">
+                        <label class="filter-label">
+                            <span class="filter-label-icon">📋</span>
+                            Tipo de Movimiento
+                        </label>
+                        <div class="filter-input-wrapper">
+                            <span class="filter-input-icon">📦</span>
+                            <select id="filterTipo" class="filter-select" onchange="updateFilterCount()">
+                                <option value="">Todos los tipos</option>
+                                <option value="ENTRADA">Entrada</option>
+                                <option value="SALIDA">Salida</option>
+                                <option value="TRANSFERENCIA">Transferencia</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="filter-field">
+                        <label class="filter-label">
+                            <span class="filter-label-icon">📅</span>
+                            Fecha Inicio
+                        </label>
+                        <div class="filter-input-wrapper">
+                            <span class="filter-input-icon">🗓️</span>
+                            <input type="date" id="filterFechaInicio" class="filter-input" onchange="updateFilterCount()">
+                        </div>
+                    </div>
+
+                    <div class="filter-field">
+                        <label class="filter-label">
+                            <span class="filter-label-icon">📅</span>
+                            Fecha Fin
+                        </label>
+                        <div class="filter-input-wrapper">
+                            <span class="filter-input-icon">🗓️</span>
+                            <input type="date" id="filterFechaFin" class="filter-input" onchange="updateFilterCount()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filters-buttons">
+                    <button class="btn-filter btn-filter-clear" onclick="clearMovimientosFilters()">
+                        ✖️ Limpiar Filtros
+                    </button>
+                    <button class="btn-filter btn-filter-primary" onclick="loadMovimientos()">
+                        🔍 Buscar
+                    </button>
+                </div>
+            </div>
+
+            <div id="movimientosList" class="movements-list">
+                <div class="loading">Cargando movimientos...</div>
+            </div>
+        </div>
+
+        <!-- Tab: Ver Stock -->
+        <div id="stock" class="tab-content">
+            <div class="filters-container">
+                <div class="filters-header">
+                    <div class="filters-title">
+                        Consultar Stock por Bodega
+                    </div>
+                    <div class="filters-actions">
+                        <span class="filter-badge" id="stockFilterCount" style="display: none;">1</span>
+                    </div>
+                </div>
+
+                <div class="filters-grid">
+                    <div class="filter-field">
+                        <label class="filter-label">
+                            <span class="filter-label-icon">🏪</span>
+                            Seleccionar Bodega
+                        </label>
+                        <div class="filter-input-wrapper">
+                            <span class="filter-input-icon">📍</span>
+                            <select id="stockBodega" class="filter-select" onchange="updateStockFilterCount()">
+                                <option value="">Selecciona una bodega...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="filter-field">
+                        <label class="filter-label">
+                            <span class="filter-label-icon">🔍</span>
+                            Buscar Producto
+                        </label>
+                        <div class="filter-input-wrapper">
+                            <span class="filter-input-icon">📦</span>
+                            <input type="text" id="searchStockProducto" class="filter-input" 
+                                placeholder="Nombre del producto..." 
+                                onkeyup="filterStockList()"
+                                disabled>
+                        </div>
+                    </div>
+
+                    <div class="filter-field">
+                        <label class="filter-label">
+                            <span class="filter-label-icon">⚠️</span>
+                            Stock Bajo
+                        </label>
+                        <div class="filter-input-wrapper">
+                            <span class="filter-input-icon">📊</span>
+                            <select id="filterStockBajo" class="filter-select" onchange="filterStockList()" disabled>
+                                <option value="">Todos los niveles</option>
+                                <option value="bajo">Stock bajo (< 10)</option>
+                                <option value="medio">Stock medio (10-50)</option>
+                                <option value="alto">Stock alto (> 50)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filters-buttons">
+                    <button class="btn-filter btn-filter-clear" onclick="clearStockFilters()">
+                        ✖️ Limpiar
+                    </button>
+                    <button class="btn-filter btn-filter-primary" onclick="loadStock()">
+                        🔍 Consultar Stock
+                    </button>
+                </div>
+            </div>
+            
+            <div class="stock-stats" id="stockStats" style="display: none;">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalProductosStock">0</div>
+                    <div class="stat-label">Productos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalUnidadesStock">0</div>
+                    <div class="stat-label">Unidades Totales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stockBajoCount">0</div>
+                    <div class="stat-label">Stock Bajo</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="valorTotalStock">$0</div>
+                    <div class="stat-label">Valor Estimado</div>
+                </div>
+            </div>
+
+            <div id="stockList" class="stock-list">
+                <div class="loading">Selecciona una bodega para ver el stock</div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/movimientos.js"></script>
+    <script src="js/utils.js"></script>
+</body>
+</html>
