@@ -1,0 +1,391 @@
+{
+  "info": {
+    "name": "Logitrack API - Full",
+    "_postman_id": "logitrack-full-collection",
+    "description": "Colección para probar todos los endpoints de Logitrack (login automático y uso de token).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth - Register",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"test-user\",\n  \"email\": \"test.user+{{random}}@example.com\",\n  \"password\": \"123456\",\n  \"rol\": \"EMPLEADO\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/auth/register",
+          "host": [
+            "{{base_url}}/auth/register"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Auth - Login (sets auth_token)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const json = pm.response.json();",
+              "if (json && json.token) {",
+              "  pm.environment.set('auth_token', json.token);",
+              "  console.log('auth_token set');",
+              "} else {",
+              "  console.log('no token in response');",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"prueba.admin@example.com\",\n  \"password\": \"123456\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/auth/login",
+          "host": [
+            "{{base_url}}/auth/login"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Auth - Me",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/auth/me",
+          "host": [
+            "{{base_url}}/auth/me"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Bodegas - List",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/bodegas",
+          "host": [
+            "{{base_url}}/bodegas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Bodegas - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Bodega Insomnia\",\n  \"ubicacion\": \"Calle Prueba 1\",\n  \"capacidad\": 100,\n  \"encargadoId\": 1,\n  \"activo\": true\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/bodegas",
+          "host": [
+            "{{base_url}}/bodegas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Productos - List",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/productos",
+          "host": [
+            "{{base_url}}/productos"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Productos - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Producto Insomnia\",\n  \"categoria\": \"General\",\n  \"precio\": 9.99,\n  \"activo\": true\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/productos",
+          "host": [
+            "{{base_url}}/productos"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Inventario - Get Stock (example)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/inventario/stock?bodegaId=1&productoId=1",
+          "host": [
+            "{{base_url}}/inventario/stock"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Movimientos - Registrar Entrada",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"bodegaId\": 1,\n  \"detalles\": [ { \"producto\": { \"id\": 1 }, \"cantidad\": 10 } ]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/movimientos/entrada",
+          "host": [
+            "{{base_url}}/movimientos/entrada"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Movimientos - Registrar Salida",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"bodegaId\": 1,\n  \"detalles\": [ { \"producto\": { \"id\": 1 }, \"cantidad\": 2 } ]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/movimientos/salida",
+          "host": [
+            "{{base_url}}/movimientos/salida"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Usuarios - List",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/usuarios",
+          "host": [
+            "{{base_url}}/usuarios"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Auditoria - List (example)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/auditoria",
+          "host": [
+            "{{base_url}}/auditoria"
+          ]
+        }
+      }
+    }
+    ,
+    {
+      "name": "Movimientos - Registrar Transferencia",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{auth_token}}" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"detalles\": [ { \"productoId\": 1, \"cantidad\": 5 } ],\n  \"observaciones\": \"Transferencia prueba\"\n}" },
+        "url": { "raw": "{{base_url}}/movimientos/transferencia/1/2", "host": [ "{{base_url}}/movimientos/transferencia/1/2" ] }
+      }
+    },
+    {
+      "name": "Movimientos - List All (last month)",
+      "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "url": { "raw": "{{base_url}}/movimientos", "host": [ "{{base_url}}/movimientos" ] } }
+    },
+    {
+      "name": "Movimientos - Por fecha (example)",
+      "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "url": { "raw": "{{base_url}}/movimientos/por-fecha?fechaInicio=2025-01-01T00:00:00&fechaFin=2025-12-31T23:59:59", "host": [ "{{base_url}}/movimientos/por-fecha" ] } }
+    },
+    {
+      "name": "Movimientos - Por tipo (ENTRADA)",
+      "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "url": { "raw": "{{base_url}}/movimientos/por-tipo/ENTRADA", "host": [ "{{base_url}}/movimientos/por-tipo/ENTRADA" ] } }
+    },
+    {
+      "name": "Movimientos - Por bodega (1)",
+      "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "url": { "raw": "{{base_url}}/movimientos/por-bodega/1", "host": [ "{{base_url}}/movimientos/por-bodega/1" ] } }
+    },
+    {
+      "name": "Movimientos - Por usuario (1)",
+      "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "url": { "raw": "{{base_url}}/movimientos/por-usuario/1", "host": [ "{{base_url}}/movimientos/por-usuario/1" ] } }
+    },
+    {
+      "name": "Movimientos - Obtener detalles (movimientoId) (example)",
+      "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "url": { "raw": "{{base_url}}/movimientos/1/detalles", "host": [ "{{base_url}}/movimientos/1/detalles" ] } }
+    },
+    {
+      "name": "Movimientos - Productos mas movidos",
+      "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "url": { "raw": "{{base_url}}/movimientos/reportes/productos-mas-movidos", "host": [ "{{base_url}}/movimientos/reportes/productos-mas-movidos" ] } }
+    },
+    {
+      "name": "Movimientos - Verificar stock disponible",
+      "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "url": { "raw": "{{base_url}}/movimientos/verificar-stock/1/1/1", "host": [ "{{base_url}}/movimientos/verificar-stock/1/1/1" ] } }
+    },
+    {
+      "name": "Movimientos - Stock actual",
+      "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "url": { "raw": "{{base_url}}/movimientos/stock-actual/1/1", "host": [ "{{base_url}}/movimientos/stock-actual/1/1" ] } }
+    },
+    {
+      "name": "Movimientos - Cancelar movimiento (DELETE)",
+      "request": { "method": "DELETE", "header": [ { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "url": { "raw": "{{base_url}}/movimientos/1", "host": [ "{{base_url}}/movimientos/1" ] } }
+    },
+    {
+      "name": "Inventarios - List",
+      "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "url": { "raw": "{{base_url}}/inventarios", "host": [ "{{base_url}}/inventarios" ] } }
+    },
+    {
+      "name": "Inventarios - Get by id",
+      "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "url": { "raw": "{{base_url}}/inventarios/1", "host": [ "{{base_url}}/inventarios/1" ] } }
+    },
+    {
+      "name": "Inventarios - By producto",
+      "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "url": { "raw": "{{base_url}}/inventarios/producto/1", "host": [ "{{base_url}}/inventarios/producto/1" ] } }
+    },
+    {
+      "name": "Inventarios - By bodega",
+      "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "url": { "raw": "{{base_url}}/inventarios/bodega/1", "host": [ "{{base_url}}/inventarios/bodega/1" ] } }
+    },
+    {
+      "name": "Inventarios - By producto+bodega",
+      "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "url": { "raw": "{{base_url}}/inventarios/producto/1/bodega/1", "host": [ "{{base_url}}/inventarios/producto/1/bodega/1" ] } }
+    },
+    {
+      "name": "Inventarios - Create",
+      "request": { "method": "POST", "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "body": { "mode": "raw", "raw": "{\n  \"productoId\": 1,\n  \"bodegaId\": 1,\n  \"stockActual\": 100\n}" }, "url": { "raw": "{{base_url}}/inventarios", "host": [ "{{base_url}}/inventarios" ] } }
+    },
+    {
+      "name": "Inventarios - Update",
+      "request": { "method": "PUT", "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "body": { "mode": "raw", "raw": "{\n  \"productoId\": 1,\n  \"bodegaId\": 1,\n  \"stockActual\": 120\n}" }, "url": { "raw": "{{base_url}}/inventarios/1", "host": [ "{{base_url}}/inventarios/1" ] } }
+    },
+    {
+      "name": "Inventarios - Delete",
+      "request": { "method": "DELETE", "header": [ { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "url": { "raw": "{{base_url}}/inventarios/1", "host": [ "{{base_url}}/inventarios/1" ] } }
+    },
+    {
+      "name": "Auditoria - Por usuario (1)",
+      "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "url": { "raw": "{{base_url}}/auditoria/por-usuario/1", "host": [ "{{base_url}}/auditoria/por-usuario/1" ] } }
+    },
+    {
+      "name": "Auditoria - Por operacion (CREACION)",
+      "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "url": { "raw": "{{base_url}}/auditoria/por-operacion/CREACION", "host": [ "{{base_url}}/auditoria/por-operacion/CREACION" ] } }
+    },
+    {
+      "name": "Auditoria - Por entidad (Bodega)",
+      "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "url": { "raw": "{{base_url}}/auditoria/por-entidad/Bodega", "host": [ "{{base_url}}/auditoria/por-entidad/Bodega" ] } }
+    },
+    {
+      "name": "Auditoria - Por fecha (example)",
+      "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "url": { "raw": "{{base_url}}/auditoria/por-fecha?fechaInicio=2025-01-01T00:00:00&fechaFin=2025-12-31T23:59:59", "host": [ "{{base_url}}/auditoria/por-fecha" ] } }
+    },
+    {
+      "name": "Auditoria - Ultimas",
+      "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "url": { "raw": "{{base_url}}/auditoria/ultimas", "host": [ "{{base_url}}/auditoria/ultimas" ] } }
+    },
+    {
+      "name": "Auditoria - Hoy",
+      "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{auth_token}}" } ], "url": { "raw": "{{base_url}}/auditoria/hoy", "host": [ "{{base_url}}/auditoria/hoy" ] } }
+    }
+  ]
+}

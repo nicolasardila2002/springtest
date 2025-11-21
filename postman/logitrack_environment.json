@@ -1,0 +1,23 @@
+{
+  "id": "logitrack-env",
+  "name": "logitrack-local",
+  "values": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080/api",
+      "enabled": true
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "random",
+      "value": "{{__randomInt}}",
+      "enabled": true
+    }
+  ],
+  "timestamp": 0,
+  "_postman_variable_scope": "environment"
+}
