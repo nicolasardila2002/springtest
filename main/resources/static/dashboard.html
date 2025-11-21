@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - LogiTrack</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="navbar">
+                <div class="logo">LogiTrack</div>
+                <nav class="nav-links">
+                    <a href="dashboard.html" class="nav-link active">Dashboard</a>
+                    <a href="movimientos.html" class="nav-link">Movimientos</a>
+                    <a href="bodegas.html" class="nav-link">Bodegas</a>
+                    <a href="productos.html" class="nav-link">Productos</a>
+                    <a href="auditoria.html" class="nav-link">Auditoría</a>
+                </nav>
+                <div class="user-menu">
+                    <span id="userName">Usuario</span>
+                    <button onclick="logout()" class="btn btn-secondary">Cerrar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="dashboard-header">
+            <h1>Dashboard</h1>
+            <p>Resumen general del sistema</p>
+        </div>
+
+        <!-- Métricas Rápidas -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-icon">📦</div>
+                <div class="metric-info">
+                    <h3>Total Productos</h3>
+                    <span class="metric-value" id="totalProductos">0</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-icon">🏪</div>
+                <div class="metric-info">
+                    <h3>Bodegas Activas</h3>
+                    <span class="metric-value" id="totalBodegas">0</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-icon">📊</div>
+                <div class="metric-info">
+                    <h3>Movimientos</h3>
+                    <span class="metric-value" id="movimientosHoy">0</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-icon">👥</div>
+                <div class="metric-info">
+                    <h3>Usuarios Activos</h3>
+                    <span class="metric-value" id="usuariosActivos">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Secciones de Acción Rápida -->
+        <div class="action-grid">
+            <div class="action-section">
+                <h2>Acciones Rápidas</h2>
+                <div class="action-buttons">
+                    <button onclick="navigateTo('movimientos.html?type=entrada')" class="btn-action">
+                        <span class="action-icon">⬇️</span>
+                        <span>Entrada Inventario</span>
+                    </button>
+                    <button onclick="navigateTo('movimientos.html?type=salida')" class="btn-action">
+                        <span class="action-icon">⬆️</span>
+                        <span>Salida Inventario</span>
+                    </button>
+                    <button onclick="navigateTo('movimientos.html?type=transferencia')" class="btn-action">
+                        <span class="action-icon">🔄</span>
+                        <span>Transferencia</span>
+                    </button>
+                    <button onclick="navigateTo('productos.html')" class="btn-action">
+                        <span class="action-icon">📦</span>
+                        <span>Gestionar Productos</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="recent-section">
+                <h2>Movimientos Recientes</h2>
+                <div id="recentMovimientos" class="recent-list">
+                    <div class="loading">Cargando movimientos...</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/utils.js"></script>
+</body>
+</html>

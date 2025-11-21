@@ -1,0 +1,170 @@
+/* Auditoria Styles */
+.auditoria-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.stat-card {
+    background: var(--bg-white);
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 6px;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+.auditoria-list {
+    background: var(--bg-white);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    margin-top: 20px;
+}
+
+.auditoria-item {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    align-items: start;
+}
+
+.auditoria-item:last-child {
+    border-bottom: none;
+}
+
+.auditoria-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-bg);
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.auditoria-info {
+    flex: 1;
+}
+
+.auditoria-info h4 {
+    color: var(--text-dark);
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+.auditoria-info p {
+    color: var(--text-light);
+    font-size: 12px;
+    margin: 2px 0;
+}
+
+.auditoria-badge {
+    padding: 4px 10px;
+    border-radius: 16px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.badge-insert {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-update {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.badge-delete {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.auditoria-details {
+    margin-top: 8px;
+    padding: 10px;
+    background: var(--bg-gray);
+    border-radius: 6px;
+    font-size: 11px;
+    color: var(--text-light);
+}
+
+.json-view {
+    font-family: 'Courier New', monospace;
+    white-space: pre-wrap;
+    word-break: break-all;
+    font-size: 11px;
+}
+
+/* ========== RESPONSIVE AUDITORIA ========== */
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .auditoria-stats {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Mobile Large */
+@media (max-width: 768px) {
+    .auditoria-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .stat-card {
+        padding: 12px;
+    }
+    
+    .stat-value {
+        font-size: 20px;
+    }
+    
+    .auditoria-item {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .auditoria-icon {
+        justify-self: flex-start;
+    }
+    
+    .auditoria-badge {
+        justify-self: flex-start;
+    }
+}
+
+/* Mobile Small */
+@media (max-width: 576px) {
+    .auditoria-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .auditoria-info h4 {
+        font-size: 13px;
+    }
+    
+    .auditoria-details {
+        padding: 8px;
+    }
+    
+    .json-view {
+        font-size: 10px;
+    }
+}

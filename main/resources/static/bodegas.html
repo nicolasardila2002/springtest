@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bodegas - LogiTrack</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/bodegas.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="navbar">
+                <div class="logo">LogiTrack</div>
+                <nav class="nav-links">
+                    <a href="dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="movimientos.html" class="nav-link">Movimientos</a>
+                    <a href="bodegas.html" class="nav-link active">Bodegas</a>
+                    <a href="productos.html" class="nav-link">Productos</a>
+                    <a href="auditoria.html" class="nav-link">Auditoría</a>
+                </nav>
+                <div class="user-menu">
+                    <span id="userName">Usuario</span>
+                    <button onclick="logout()" class="btn btn-secondary">Cerrar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>Gestión de Bodegas</h1>
+            <p>Administrar bodegas y sus responsables</p>
+            <button class="btn btn-primary" onclick="showModal('create')">+ Nueva Bodega</button>
+        </div>
+
+        <div class="filters-container">
+            <div class="filters-header">
+                <div class="filters-title">
+                    Filtros de Bodegas
+                </div>
+                <div class="filters-actions">
+                    <span class="filter-badge" id="bodegasFilterCount" style="display: none;">0</span>
+                </div>
+            </div>
+
+            <div class="filters-grid">
+                <div class="filter-field">
+                    <label class="filter-label">
+                        <span class="filter-label-icon">🔍</span>
+                        Buscar por Nombre
+                    </label>
+                    <div class="filter-input-wrapper">
+                        <span class="filter-input-icon">🏪</span>
+                        <input type="text" id="searchBodega" class="filter-input" 
+                            placeholder="Nombre de bodega..." 
+                            onkeyup="debouncedFilterBodegas()">
+                    </div>
+                </div>
+
+                <div class="filter-field">
+                    <label class="filter-label">
+                        <span class="filter-label-icon">⚡</span>
+                        Estado
+                    </label>
+                    <div class="filter-input-wrapper">
+                        <span class="filter-input-icon">📊</span>
+                        <select id="filterActivo" class="filter-select" onchange="filterBodegas()">
+                            <option value="">Todos los estados</option>
+                            <option value="true">Activas</option>
+                            <option value="false">Inactivas</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filters-buttons">
+                <button class="btn-filter btn-filter-clear" onclick="clearBodegasFilters()">
+                    ✖️ Limpiar
+                </button>
+            </div>
+        </div>
+
+        <div id="bodegasList" class="bodegas-grid">
+            <div class="loading">Cargando bodegas...</div>
+        </div>
+    </main>
+
+    <!-- Modal para crear/editar bodega -->
+    <div id="bodegaModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Nueva Bodega</h3>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="bodegaForm">
+                <div class="form-group">
+                    <label for="nombre">Nombre *</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="ubicacion">Ubicación *</label>
+                    <input type="text" id="ubicacion" name="ubicacion" required>
+                </div>
+                <div class="form-group">
+                    <label for="capacidad">Capacidad</label>
+                    <input type="number" id="capacidad" name="capacidad" min="1">
+                </div>
+                <div class="form-group">
+                    <label for="encargadoId">Encargado (ID) *</label>
+                    <div class="encargado-input-row">
+                        <input type="number" id="encargadoId" name="encargadoId" required placeholder="Ingrese ID de la persona">
+                        <span id="encargadoName" class="muted-text"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="activo" name="activo" checked>
+                        Bodega activa
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Bodega</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/bodegas.js"></script>
+    <script src="js/utils.js"></script>
+</body>
+</html>
